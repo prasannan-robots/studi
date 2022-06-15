@@ -5,6 +5,7 @@ import 'palette.dart';
 import 'model.dart';
 import 'postpage.dart';
 //import 'picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 
 void main() async {
@@ -61,6 +62,41 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var model = ExampleModel();
+  String Standard_default_value = 'Pick Your Standard';
+  String Subject_default_value = 'Pick Your Subject';
+  Stream<QuerySnapshot> usersStream = FirebaseFirestore.instance
+      .collection('post')
+      .orderBy("Likes", descending: true)
+      .snapshots();
+  void Change_val() {
+    print("${Standard_default_value} , ${Subject_default_value}");
+    if (Standard_default_value == "Pick Your Standard") {
+      print(Subject_default_value);
+      usersStream = FirebaseFirestore.instance
+          .collection('post')
+          .where('Subject', isEqualTo: Subject_default_value)
+          .orderBy("Likes", descending: true)
+          //.limit(7)
+          .snapshots();
+    } else if (Subject_default_value == "Pick Your Subject") {
+      print(Standard_default_value);
+      usersStream = FirebaseFirestore.instance
+          .collection('post')
+          .where('Standard', isEqualTo: Standard_default_value)
+          .orderBy("Likes", descending: true)
+          //.limit(7)
+          .snapshots();
+    } else {
+      print('Both');
+      usersStream = FirebaseFirestore.instance
+          .collection('post')
+          .where('Standard', isEqualTo: Standard_default_value)
+          .where('Subject', isEqualTo: Subject_default_value)
+          .orderBy("Likes", descending: true)
+          //.limit(7)
+          .snapshots();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,86 +113,92 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: SingleChildScrollView(
-child: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[ 
-            SizedBox(
-              height: 50,
-            ),
-            SizedBox(
-              width: 150.0,
-              
-              child: ElevatedButton(
-                
-                style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all(Size(150, 50)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                ))),
-                child: const Text('Select Standard'),
-                onPressed: () => showMaterialScrollPicker<PickerModel>(
-                  context: context,
-                  title: 'Pick Your Standard',
-                  showDivider: false,
-                  items: ExampleModel.Standards,
-                  selectedItem: model.selectedStandards,
-                  onChanged: (value) =>
-                      setState(() => model.selectedStandards = value),
-                  onCancelled: () => print('Scroll Picker cancelled'),
-                  onConfirmed: () => print('Scroll Picker confirmed'),
+        child: Center(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: Column(
+            // Column is also a layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 50,
+              ),
+              SizedBox(
+                width: 200.0,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      minimumSize: MaterialStateProperty.all(Size(150, 50)),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ))),
+                  child: Text(Standard_default_value),
+                  onPressed: () => showMaterialScrollPicker<PickerModel>(
+                    context: context,
+                    title: 'Pick your Standard',
+                    showDivider: false,
+                    items: ExampleModel.Standards,
+                    selectedItem: model.selectedStandards,
+                    onChanged: (value) => setState(() {
+                      model.selectedStandards = value;
+                      Standard_default_value = value.name;
+                      Change_val();
+                    }),
+                    onCancelled: () => print('Scroll Picker cancelled'),
+                    onConfirmed: () => print('Scroll Picker confirmed'),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              width: 150.0,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all(Size(150, 50)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                ))),
-                child: const Text('Select Subject'),
-                onPressed: () => showMaterialScrollPicker<PickerModel>(
-                  context: context,
-                  title: 'Pick Your Subject',
-                  showDivider: false,
-                  items: ExampleModel.Subject,
-                  selectedItem: model.selectedSubject,
-                  onChanged: (value) =>
-                      setState(() => model.selectedSubject = value),
-                  onCancelled: () => print('Scroll Picker cancelled'),
-                  onConfirmed: () => print('Scroll Picker confirmed'),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: 200.0,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      minimumSize: MaterialStateProperty.all(Size(150, 50)),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ))),
+                  child: Text(Subject_default_value),
+                  onPressed: () => showMaterialScrollPicker<PickerModel>(
+                    context: context,
+                    title: 'Pick Your Subject',
+                    showDivider: false,
+                    items: ExampleModel.Subject,
+                    selectedItem: model.selectedSubject,
+                    onChanged: (value) => setState(() {
+                      model.selectedSubject = value;
+                      Subject_default_value = value.name;
+                      Change_val();
+                    }),
+                    onCancelled: () => print('Scroll Picker cancelled'),
+                    onConfirmed: () => print('Scroll Picker confirmed'),
+                  ),
                 ),
               ),
-            ),SizedBox(
-              height: 50,
-            ),
-            UploadBuilder()
-          ],
+              SizedBox(
+                height: 50,
+              ),
+              UploadBuilder(usersStream: usersStream)
+            ],
+          ),
         ),
-      ),),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {},
         tooltip: 'Increment',

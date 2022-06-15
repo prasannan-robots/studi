@@ -7,6 +7,7 @@ import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 
 class ExampleModel {
   static const List<PickerModel> Standards = <PickerModel>[
+     PickerModel('Pick Your Standard', code: 'PYS'),
     PickerModel('XII Standard', code: 'XII'),
     PickerModel('XI Standard', code: 'XI'),
     PickerModel('X Standard', code: 'X'),
@@ -14,6 +15,7 @@ class ExampleModel {
   ];
   PickerModel selectedStandards = Standards[0];
   static const List<PickerModel> Subject = <PickerModel>[
+     PickerModel('Pick Your Subject', code: 'PYS'),
     PickerModel('Math', code: 'M'),
     PickerModel('Physics', code: 'P'),
     PickerModel('Chemistry', code: 'C'),

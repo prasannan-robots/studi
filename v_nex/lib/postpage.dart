@@ -9,26 +9,126 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 // final googleSignIn = GoogleSignIn();
 
+// class UploadBuilder extends StatefulWidget {
+//   final String Standard;
+//   final String Subject;
+//   const UploadBuilder({Key? key, required this.Standard, required this.Subject})
+//       : super(key: key);
+
+//   @override
+//   _UploadBuilderState createState() => _UploadBuilderState();
+// }
+
+// class _UploadBuilderState extends State<UploadBuilder> {
+//   // final String Standard = widget.Standard.toString();
+//   String Subject = "";
+//   @override
+//   void initState() {
+//     //Standard = widget.Standard;
+//     //Subject = widget.Subject;
+
+//   }
+
+//    final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
+//       .collection('post')
+
+//       .orderBy("Likes", descending: true)
+//       //.limit(7)
+//       .snapshots();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return StreamBuilder<QuerySnapshot>(
+//       stream: _usersStream,
+//       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+//         if (snapshot.hasError) {
+//           return const Text('Something went wrong');
+//         }
+
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return const CircularProgressIndicator();
+//         }
+
+//         return ListView(
+//           shrinkWrap: true,
+//           children: snapshot.data!.docs.map((DocumentSnapshot document) {
+//             Map<String, dynamic> data =
+//                 document.data()! as Map<String, dynamic>;
+//             return Card(
+//                 semanticContainer: true,
+//                 clipBehavior: Clip.antiAliasWithSaveLayer,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(10.0),
+//                 ),
+//                 elevation: 5,
+//                 margin: EdgeInsets.all(10),
+//                 color: Palette.kToDark,
+//                 child: Column(
+//                   children: [
+//                     SizedBox(
+//                       height: 10,
+//                     ),
+//                     Text(
+//                       textAlign: TextAlign.start,
+//                       "Posted by ${getValue(data['User'])}",
+//                       style: TextStyle(
+//                           fontSize: 30,
+//                           color: Colors.white,
+//                           fontFamily: "monospace"),
+//                     ),
+//                     Divider(),
+//                     Image.network(
+//                       data['link'],
+//                       fit: BoxFit.contain,
+//                     ),
+//                     Divider(),
+//                     SizedBox(
+//                       height: 10,
+//                     ),
+//                     Text(
+//                       data['description'],
+//                       style: TextStyle(
+//                           fontSize: 30,
+//                           color: Colors.white,
+//                           fontFamily: "monospace"),
+//                     ),
+//                     SizedBox(
+//                       height: 10,
+//                     ),
+//                   ],
+//                 ));
+//           }).toList(),
+//         );
+//       },
+//     );
+//   }
+// }
+
 class UploadBuilder extends StatefulWidget {
-  const UploadBuilder({Key? key}) : super(key: key);
+  //final String Standard;
+  final Stream<QuerySnapshot> usersStream;
+  const UploadBuilder({Key? key, required this.usersStream}) : super(key: key);
 
   @override
   _UploadBuilderState createState() => _UploadBuilderState();
 }
 
 class _UploadBuilderState extends State<UploadBuilder> {
-  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
-      .collection('post')
-      //.orderBy("score", descending: true)
-      //.limit(7)
-      .snapshots();
-
+  // final String Standard = widget.Standard.toString();
+  // String Subject = "";
+  // @override
+  // void initState() {
+  //   //Standard = widget.Standard;
+  //   //Subject = widget.Subject;
+  // }
+  
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _usersStream,
+      stream: widget.usersStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
+          print('${snapshot.hasError}');
           return const Text('Something went wrong');
         }
 
@@ -57,7 +157,7 @@ class _UploadBuilderState extends State<UploadBuilder> {
                     ),
                     Text(
                       textAlign: TextAlign.start,
-                      "Posted by ${getValue(data['User'])}",
+                      "Posted by ${data['User']}",
                       style: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
