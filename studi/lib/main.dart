@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:studi/home/subject_page.dart';
 import 'setup/class_selection_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  List<String>? subjectSelection = prefs.getStringList('SubjectSelection');
+  String? className = prefs.getString('class');
+  bool isLoggedIn = (subjectSelection != null && className != null);
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+  const MyApp({Key? key, required this.isLoggedIn}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +25,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: const ClassSelectionPage(),
+      home: isLoggedIn ? SubjectPage() : ClassSelectionPage(),
+      routes: {
+        '/subject': (context) => const SubjectPage(),
+      },
     );
   }
 }

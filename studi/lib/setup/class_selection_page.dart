@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'subject_selection_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ClassSelectionPage extends StatefulWidget {
   const ClassSelectionPage({super.key});
@@ -18,6 +19,18 @@ class _ClassSelectionPageState extends State<ClassSelectionPage> {
     fetchClasses();
   }
 
+  saveClass(String selected_class) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('Class', selected_class);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              SubjectSelectionPage(className: selected_class)),
+    );
+  }
+
   void fetchClasses() async {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('notes').get();
@@ -25,10 +38,11 @@ class _ClassSelectionPageState extends State<ClassSelectionPage> {
         .map((doc) => doc['Class'].toString())
         .toSet()
         .toList();
-
-    setState(() {
-      classes = distinctClasses;
-    });
+    if (this.mounted) {
+      setState(() {
+        classes = distinctClasses;
+      });
+    }
   }
 
   @override
@@ -41,17 +55,16 @@ class _ClassSelectionPageState extends State<ClassSelectionPage> {
         itemCount: classes.length,
         itemBuilder: (context, index) {
           return Card(
+              color: Colors.deepPurple,
               child: ListTile(
-            title: Text(classes[index]),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        SubjectSelectionPage(className: classes[index])),
-              );
-            },
-          ));
+                title: Text(
+                  classes[index],
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () async {
+                  saveClass(classes[index]);
+                },
+              ));
         },
       ),
     );
