@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "678727118050",
+    "project_id": "studi-3e797",
+    "storage_bucket": "studi-3e797.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678727118050:android:be35ce07f9351bca2ec2bb",
+        "android_client_info": {
+          "package_name": "com.example.studi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678727118050-2bvothljf46pivd4nvbi9i1l7kis8mgo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWchD3yuzEkcODIwkSZHVRCgeH76FMRq8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678727118050-2bvothljf46pivd4nvbi9i1l7kis8mgo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "678727118050-4dv57j86fj8t3ali9jg98o5mj27e64lk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.studi.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
